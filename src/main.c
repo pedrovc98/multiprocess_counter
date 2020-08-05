@@ -32,6 +32,7 @@ int main() {
   int numbers[100];
   int i, j = 0;
   int n = 0;
+  int counter = 0;
  
 /* Passo 1: Ler a string */ 
   fgets(str, sizeof(str), stdin);
@@ -41,11 +42,11 @@ int main() {
   for(i=0; str[i]!='\n'; i++){
     if(digit(str[i])!=-1){ /*Adiciona digitos */
       n = n*10 + digit(str[i]);
-      printf("Adicionei dígito\n");
+      /* printf("Adicionei dígito\n"); */
     }
-    if(digit(str[i+1])==-1){
+    if(digit(str[i])!=-1 && digit(str[i+1])==-1){
       numbers[j] = n; /*guarda o numero encontrado */
-      printf("Guardei número\n");
+      /* printf("Guardei número: %d\n", n); */
       j++;
       n = 0;
     }
@@ -62,7 +63,20 @@ int main() {
 
 /* Passo 3: Verificar se são primos */
 
-if(prime(113)){printf("Primo\n");}
+  for(i=0; i<j; i++){
+    if(prime(numbers[i])){
+      printf("%d é primo\n", numbers[i]);
+      counter++;
+    }
+    else{
+      printf("%d não é primo\n", numbers[i]);
+    } 
+  }
 
+  printf("Encontrei %d números\n", j);
+  printf("%d são primos\n", counter);
+
+  while(1);
+  
   return 0;
 }
