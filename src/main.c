@@ -1,4 +1,9 @@
 #include <stdio.h>
+#include <sys/mman.h>
+#include <stdlib.h> /* exit() */
+#include <sys/types.h> /* define pid_t */
+#include <sys/wait.h>
+#include <unistd.h> /* fork() */
 
 int digit(char a){ /* converte digito em char para int */
   int b = a - '0';
@@ -33,6 +38,7 @@ int main() {
   int i, j = 0;
   int n = 0;
   int counter = 0;
+  pid_t filho1, filho2, filho3;
  
 /* Passo 1: Ler a string */ 
   fgets(str, sizeof(str), stdin);
@@ -61,7 +67,44 @@ int main() {
   } 
 */
 
-/* Passo 3: Verificar se são primos */
+/* Passo 3: Verificar se são primos em um máximo de 4 processos simultâneos */
+
+ /* Definir flags de protecao e visibilidade de memoria */
+  int protection = PROT_READ | PROT_WRITE;
+  int visibility = MAP_SHARED | MAP_ANON;
+
+  /* Criar area de memoria compartilhada */
+  int *p;
+  p = (int*) mmap(NULL, sizeof(int), protection, visibility, 0, 0);
+  if ((long int)p==-1) printf("Erro de alocacao!\n");
+  (*p)=0;
+
+  if(j>=2) filho1 = fork();
+  if(j>=3) filho2 = fork();
+  if(j>=4) filho3 = fork();
+
+  if(filho1==0 && filho2 != 0 && filho3 !=0) printf("Filho 1 aqui!\n");
+  else if(filho1!=0 && filho2 == 0 && filho3 !=0) printf("Filho 2 aqui!\n");
+  else if(filho1!=0 && filho2 != 0 && filho3 ==0) printf("Filho 3 aqui!\n");
+  else if(filho1!=0 && filho2 != 0 && filho3 !=0) printf("Eu sou o pai!\n");
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 
   for(i=0; i<j; i++){
     if(prime(numbers[i])){
@@ -77,6 +120,7 @@ int main() {
   printf("%d são primos\n", counter);
 
   while(1);
-  
+  */
+
   return 0;
 }
