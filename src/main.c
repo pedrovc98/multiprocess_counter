@@ -79,48 +79,74 @@ int main() {
   if ((long int)p==-1) printf("Erro de alocacao!\n");
   (*p)=0;
 
+/*
+
+Primeiros testes para criação de processos filhos
+
   if(j>=2) filho1 = fork();
   if(j>=3) filho2 = fork();
   if(j>=4) filho3 = fork();
 
-  if(filho1==0 && filho2 != 0 && filho3 !=0) printf("Filho 1 aqui!\n");
-  else if(filho1!=0 && filho2 == 0 && filho3 !=0) printf("Filho 2 aqui!\n");
-  else if(filho1!=0 && filho2 != 0 && filho3 ==0) printf("Filho 3 aqui!\n");
-  else if(filho1!=0 && filho2 != 0 && filho3 !=0) printf("Eu sou o pai!\n");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-
-  for(i=0; i<j; i++){
-    if(prime(numbers[i])){
-      printf("%d é primo\n", numbers[i]);
-      counter++;
+  if(filho1==0 && filho2 != 0 && filho3 !=0){ 
+    printf("Filho 1 aqui!\n"); *p = *p + 1;
     }
-    else{
-      printf("%d não é primo\n", numbers[i]);
-    } 
+  else if(filho1!=0 && filho2 == 0 && filho3 !=0){ 
+    printf("Filho 2 aqui!\n"); *p = *p + 1;
+    }
+  else if(filho1!=0 && filho2 != 0 && filho3 ==0){ 
+    printf("Filho 3 aqui!\n"); *p = *p + 1;
+    }
+  else if(filho1!=0 && filho2 != 0 && filho3 !=0){
+    waitpid(filho1, NULL, 0);
+    waitpid(filho2, NULL, 0);
+    waitpid(filho3, NULL, 0);
+    printf("Eu sou o pai!\n");
+    printf("%d\n", *p);
   }
 
-  printf("Encontrei %d números\n", j);
-  printf("%d são primos\n", counter);
 
-  while(1);
-  */
+*/
+  i = j-1;
+  while(i>=0){ /* i representa os números restante para analisar */
+    
+    if(i>=1) filho1 = fork();
+    if(i>=2) filho2 = fork();
+    if(i>=3) filho3 = fork();
+
+    if(filho1==0 && filho2 != 0 && filho3 !=0){ 
+      /* printf("Filho 1 aqui!\n"); */
+      if(prime(numbers[i-1])) *p = *p + 1; 
+      exit(0);
+      }
+    else if(filho1!=0 && filho2 == 0 && filho3 !=0){ 
+      /* printf("Filho 2 aqui!\n"); *p = *p + 1; */
+      if(prime(numbers[i-2])) *p = *p + 1;
+      exit(0); 
+      }
+    else if(filho1!=0 && filho2 != 0 && filho3 ==0){ 
+      /* printf("Filho 3 aqui!\n"); *p = *p + 1; */
+      if(prime(numbers[i-3])) *p = *p + 1;
+      exit(0); 
+      }
+    else if(filho1!=0 && filho2 != 0 && filho3 !=0){
+      if(prime(numbers[i])) *p = *p + 1; 
+      waitpid(filho1, NULL, 0);
+      waitpid(filho2, NULL, 0);
+      waitpid(filho3, NULL, 0);
+
+      /* printf("Eu sou o pai!\n"); */
+    }
+
+    if((i)<=3){
+      i = -1;
+    }
+    else{
+      i = i-4;
+    }
+
+  }
+
+  printf("%d\n", *p); /* Imprime a quantidade identificada de números primos */
 
   return 0;
 }
