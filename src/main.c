@@ -5,7 +5,7 @@
 #include <sys/wait.h>
 #include <unistd.h> /* fork() */
 
-int digit(char a){ /* converte digito em char para int */
+int digit(char a){ /* função que converte digito (em char) para int */
   int b = a - '0';
   if(b >=0 && b<=9) {
     return b;
@@ -15,7 +15,7 @@ int digit(char a){ /* converte digito em char para int */
   } 
 }
 
-int prime(int a){ /*verifica se um número é primo */
+int prime(int a){ /*função que verifica se um número é primo */
   int b = a/2;
   int i = 2;
   int flag = 0;
@@ -79,24 +79,28 @@ int main() {
   if ((long int)p==-1) printf("Erro de alocacao!\n");
   (*p)=0;
 
-/*
+/* --------------------------------------------- */
 
-Primeiros testes para criação de processos filhos
-
+/* Primeiros testes para criação de processos filhos */
+/* 
   if(j>=2) filho1 = fork();
-  if(j>=3) filho2 = fork();
-  if(j>=4) filho3 = fork();
+  if(j>=3 && filho1 != 0) filho2 = fork();
+  if(j>=4 && filho1 != 0 && filho2 != 0 ) filho3 = fork();
 
-  if(filho1==0 && filho2 != 0 && filho3 !=0){ 
+
+  if(filho1==0){ 
     printf("Filho 1 aqui!\n"); *p = *p + 1;
+    exit(0);
     }
-  else if(filho1!=0 && filho2 == 0 && filho3 !=0){ 
+  else if(filho2==0){ 
     printf("Filho 2 aqui!\n"); *p = *p + 1;
+    exit(0);
     }
-  else if(filho1!=0 && filho2 != 0 && filho3 ==0){ 
+  else if(filho3==0){ 
     printf("Filho 3 aqui!\n"); *p = *p + 1;
+    exit(0);
     }
-  else if(filho1!=0 && filho2 != 0 && filho3 !=0){
+  else{
     waitpid(filho1, NULL, 0);
     waitpid(filho2, NULL, 0);
     waitpid(filho3, NULL, 0);
@@ -104,32 +108,35 @@ Primeiros testes para criação de processos filhos
     printf("%d\n", *p);
   }
 
+/* --------------------------------------------- */
 
-*/
-  i = j-1;
-  while(i>=0){ /* i representa os números restante para analisar */
+  i = j;
+  while(i>0){ /* i representa os números restante para analisar */
     
-    if(i>=1) filho1 = fork();
-    if(i>=2) filho2 = fork();
-    if(i>=3) filho3 = fork();
+    /* As operações de fork só são feitas no processo pai */
+    if(i>=2) filho1 = fork();
+    if(i>=3 && filho1 != 0) filho2 = fork();
+    if(i>=4 && filho1 != 0 && filho2 != 0 ) filho3 = fork();
 
-    if(filho1==0 && filho2 != 0 && filho3 !=0){ 
+    /* Cada processo analisa uma posição do vetor de números paralelamente */
+
+    if(filho1==0){ 
       /* printf("Filho 1 aqui!\n"); */
-      if(prime(numbers[i-1])) *p = *p + 1; 
+      if(prime(numbers[i-2])) *p = *p + 1; 
       exit(0);
       }
-    else if(filho1!=0 && filho2 == 0 && filho3 !=0){ 
+    else if(filho2 == 0){ 
       /* printf("Filho 2 aqui!\n"); *p = *p + 1; */
-      if(prime(numbers[i-2])) *p = *p + 1;
-      exit(0); 
-      }
-    else if(filho1!=0 && filho2 != 0 && filho3 ==0){ 
-      /* printf("Filho 3 aqui!\n"); *p = *p + 1; */
       if(prime(numbers[i-3])) *p = *p + 1;
       exit(0); 
       }
-    else if(filho1!=0 && filho2 != 0 && filho3 !=0){
-      if(prime(numbers[i])) *p = *p + 1; 
+    else if(filho3 == 0){ 
+      /* printf("Filho 3 aqui!\n"); *p = *p + 1; */
+      if(prime(numbers[i-4])) *p = *p + 1;
+      exit(0); 
+      }
+    else{
+      if(prime(numbers[i-1])) *p = *p + 1; 
       waitpid(filho1, NULL, 0);
       waitpid(filho2, NULL, 0);
       waitpid(filho3, NULL, 0);
@@ -137,16 +144,14 @@ Primeiros testes para criação de processos filhos
       /* printf("Eu sou o pai!\n"); */
     }
 
-    if((i)<=3){
-      i = -1;
-    }
-    else{
-      i = i-4;
-    }
+    i = i-4;
 
   }
 
+  /* Passo 4 - imprimir resultado */
+  
   printf("%d\n", *p); /* Imprime a quantidade identificada de números primos */
+
 
   return 0;
 }
