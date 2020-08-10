@@ -34,9 +34,9 @@ int prime(int a){ /*função que verifica se um número é primo */
 int main() {
 
   char str[100];
-  int numbers[100];
+  unsigned long int numbers[100];
+  unsigned long int n = 0;
   int i, j = 0;
-  int n = 0;
   int counter = 0;
   pid_t filho1, filho2, filho3;
  
